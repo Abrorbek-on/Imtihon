@@ -5,7 +5,7 @@ import Course from './course/page'
 import Teacher from './teacher/page'
 import Xona from './xona/page'
 import Talabalar from './talabalar/page'
-import Navbar from './Navbar/page'
+import LoginPage from './login/page'
 
 function page() {
   return (
@@ -16,6 +16,7 @@ function page() {
       <Teacher />
       <Xona />
       <Talabalar />
+      <LoginPage />
     </>
   )
 }

@@ -46,7 +46,6 @@ interface Group {
 }
 
 const API_URL = "http://localhost:5000/groups"
-
 const filterOptions = ["Faol guruhlar", "O'qituvchi", "Kurslar bo'yicha", "Teglar"]
 
 export default function Group() {
@@ -56,7 +55,6 @@ export default function Group() {
     const [showModal, setShowModal] = useState(false)
     const [editingGroup, setEditingGroup] = useState<Group | null>(null)
     const [openMenuId, setOpenMenuId] = useState<number | null>(null)
-
     const [formData, setFormData] = useState({
         name: "",
         branch_id: "",
@@ -69,7 +67,6 @@ export default function Group() {
         start_date: "",
         end_date: "",
     })
-
     const daysOptions = ["Dushanba", "Seshanba", "Chorshanba", "Payshanba", "Juma", "Shanba", "Yakshanba"]
 
     const fetchGroups = async () => {
@@ -93,17 +90,15 @@ export default function Group() {
 
     const handleCreate = async () => {
         if (!formData.name || formData.days.length === 0) {
-            alert("Iltimos, barcha majburiy maydonlarni to'ldiring");
-            return;
+            alert("Iltimos, barcha majburiy maydonlarni to'ldiring")
+            return
         }
-
         try {
             const safeDate = (value: string) => {
-                if (!value) return null;
-                const d = new Date(value);
-                return isNaN(d.getTime()) ? null : d.toISOString();
-            };
-
+                if (!value) return null
+                const d = new Date(value)
+                return isNaN(d.getTime()) ? null : d.toISOString()
+            }
             const cleanedData = {
                 ...formData,
                 branch_id: Number(formData.branch_id),
@@ -113,35 +108,31 @@ export default function Group() {
                 start_time: safeDate(formData.start_time),
                 start_date: safeDate(formData.start_date),
                 end_date: safeDate(formData.end_date),
-            };
-
+            }
             const response = await fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(cleanedData),
-            });
-
+            })
             if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || "Failed to create group");
+                const error = await response.json()
+                throw new Error(error.message || "Failed to create group")
             }
-
-            await fetchGroups();
-            setShowModal(false);
-            resetForm();
-            alert("Guruh muvaffaqiyatli yaratildi!");
+            await fetchGroups()
+            setShowModal(false)
+            resetForm()
+            alert("Guruh muvaffaqiyatli yaratildi!")
         } catch (error) {
-            console.error("Error creating group:", error);
-            alert("Guruh yaratishda xatolik: " + (error as Error).message);
+            console.error("Error creating group:", error)
+            alert("Guruh yaratishda xatolik: " + (error as Error).message)
         }
-    };
+    }
 
     const handleUpdate = async () => {
         if (!editingGroup || !formData.name) {
             alert("Iltimos, barcha majburiy maydonlarni to'ldiring")
             return
         }
-
         try {
             const cleanedData = {
                 ...formData,
@@ -153,18 +144,15 @@ export default function Group() {
                 start_date: new Date(formData.start_date).toISOString(),
                 end_date: new Date(formData.end_date).toISOString(),
             }
-
             const response = await fetch(`${API_URL}/${editingGroup.id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(cleanedData),
             })
-
             if (!response.ok) {
                 const error = await response.json()
                 throw new Error(error.message || "Failed to update group")
             }
-
             await fetchGroups()
             setShowModal(false)
             setEditingGroup(null)
@@ -178,7 +166,6 @@ export default function Group() {
 
     const handleDelete = async (id: number) => {
         if (!confirm("Haqiqatan ham bu guruhni o'chirmoqchimisiz?")) return
-
         try {
             const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" })
             if (!response.ok) throw new Error("Failed to delete group")
@@ -248,9 +235,7 @@ export default function Group() {
                         <div className="flex items-center gap-4">
                             <div className="flex justify-center gap-5">
                                 <h1 className="text-lg font-semibold">Yangi Dizayn</h1>
-                                <button className="bg-gray-200 hover:bg-gray-300 text-sm font-medium px-3 py-1 rounded-lg transition">
-                                    uz
-                                </button>
+                                <button className="bg-gray-200 hover:bg-gray-300 text-sm font-medium px-3 py-1 rounded-lg transition">uz</button>
                             </div>
                             <Maximize2 className="w-7 h-7 text-gray-600 cursor-pointer hover:text-black" />
                             <HelpCircle className="w-7 h-7 text-gray-600 cursor-pointer hover:text-black" />

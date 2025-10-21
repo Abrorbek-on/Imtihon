@@ -90,93 +90,79 @@ function Xona() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <aside className="w-[100px] bg-white shadow-md flex flex-col items-center py-8 gap-5">
-        <UmbrellaIcon className="w-10 h-10 text-gray-600 hover:text-yellow-500 cursor-pointer" />
-        <div className="flex flex-col items-center gap-6 mt-5">
-          <div
-            onClick={() => navigate.push("/leads")}
-            className="flex flex-col items-center text-gray-700 hover:text-yellow-600 cursor-pointer"
-          >
-            <Users size={28} />
-            <p className="text-[14px]">Lidlar</p>
-          </div>
-          <div
-            onClick={() => navigate.push("/teacher")}
-            className="flex flex-col items-center text-gray-700 hover:text-yellow-600 cursor-pointer"
-          >
-            <User2 size={28} />
-            <p className="text-[14px]">O‘qituvchilar</p>
-          </div>
-          <div
-            onClick={() => navigate.push("/group")}
-            className="flex flex-col items-center text-gray-700 hover:text-yellow-600 cursor-pointer"
-          >
-            <ClipboardList size={28} />
-            <p className="text-[14px]">Guruhlar</p>
-          </div>
-          <div
-            onClick={() => navigate.push("/talabalar")}
-            className="flex flex-col items-center text-gray-700 hover:text-yellow-600 cursor-pointer"
-          >
-            <BookOpen size={28} />
-            <p className="text-[14px]">Talabalar</p>
-          </div>
-          <div className="flex flex-col items-center text-gray-700 hover:text-yellow-600 cursor-pointer">
-            <Wallet size={28} />
-            <p className="text-[14px]">Moliya</p>
-          </div>
-          <div className="flex flex-col items-center text-gray-700 hover:text-yellow-600 cursor-pointer">
-            <BarChart size={28} />
-            <p className="text-[14px]">Hisobotlar</p>
-          </div>
-          <div
-            onClick={() => navigate.push("/sozlamalar")}
-            className="flex flex-col items-center text-yellow-600 border-l-4 border-yellow-600 pl-2 cursor-pointer"
-          >
-            <Settings size={28} />
-            <p className="text-[14px] font-medium">Sozlamalar</p>
-          </div>
-        </div>
-      </aside>
+      <main className='flex'>
+        <section>
+          <div className='flex flex-col min-h-screen items-center'>
+            <div onClick={() => navigate.push('/leads')} className='mt-[85px] flex border-l-4 cursor-pointer border-white  hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 w-35 h-25 flex-col justify-center items-center '>
+              <Users size={32} />
+              <h1 className='text-[20px]'>Lidlar</h1>
+            </div>
+            <div onClick={() => navigate.push('/teacher')} className='flex flex-col border-l-4 cursor-pointer border-white hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600  w-35 h-25 justify-center items-center '>
+              <User2 size={32} />
+              <h1 className='text-[20px]'>O‘qituvchilar</h1>
+            </div>
+            <div onClick={() => navigate.push('/group')} className='flex cursor-pointer flex-col border-l-4 border-white hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 w-35 h-25  justify-center items-center '>
+              <ClipboardList size={32} />
+              <h1 className='text-[20px]'>Guruhlar</h1>
+            </div>
 
-      <div className="flex-1">
-        <header className="shadow-sm bg-white px-10 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-5">
-            <PlusCircle
-              className="w-8 h-8 text-gray-600 cursor-pointer hover:text-black"
-              onClick={() => {
-                setIsAddOpen(true);
-                setIsEditing(false);
-                setFormData({ branch_id: 1, name: "", capacity: "" });
-              }}
-            />
-            <input
-              type="text"
-              placeholder="Qidiruv"
-              className="rounded-full px-5 py-2 bg-gray-100 w-[400px] focus:outline-none"
-            />
-          </div>
-          <div className="flex items-center gap-6">
-            <h1 className="font-semibold text-gray-800">Yangi dizayn</h1>
-            <button className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-lg">
-              uz
-            </button>
-            <Maximize2 className="text-gray-600 w-6 h-6 cursor-pointer" />
-            <HelpCircle className="text-gray-600 w-6 h-6 cursor-pointer" />
-            <Clock className="text-gray-600 w-6 h-6 cursor-pointer" />
-            <Bell className="text-gray-600 w-6 h-6 cursor-pointer" />
-            <div className="flex items-center gap-2">
-              <p className="font-semibold">Rixiboyev Abdullox</p>
-              <Image
-                src="/profile.jpg"
-                alt="profile"
-                width={32}
-                height={32}
-                className="rounded-full object-cover"
-              />
+            <div onClick={() => navigate.push("/talabalar")} className='flex flex-col border-l-4 border-white cursor-pointer hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 w-35 h-25 justify-center items-center '>
+              <BookOpen size={32} />
+              <h1 className='text-[20px]'>Talabalar</h1>
+            </div>
+            <div className='flex flex-col border-l-4 border-white cursor-pointer hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 w-35 h-25 justify-center items-center '>
+              <Wallet size={32} />
+              <h1 className='text-[20px]'>Moliya</h1>
+            </div>
+            <div className='flex flex-col w-35 h-25 border-l-4 cursor-pointer hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 border-white justify-center items-center '>
+              <BarChart size={32} />
+              <h1
+                className='text-[20px]'>Hisobotlar</h1>
+            </div>
+            <div onClick={() => navigate.push('/sozlamalar')} className='flex flex-col cursor-pointer w-35 h-25 border-l-4 hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 border-white justify-center items-center '>
+              <Settings size={32} />
+              <h1
+                className='text-[20px]'>Sozlamalar</h1>
             </div>
           </div>
+        </section>
+      </main>
+
+      <div className="flex-1">
+        <header>
+          <nav className='flex items-center p-5 px-10 justify-between'>
+            <div className='flex gap-10 items-center left-0 absolute ml-[35px]'>
+              <UmbrellaIcon className='w-12 h-12 text-gray-600 cursor-pointer hover:text-yellow-500' />
+              <PlusCircle className="w-7 h-7 text-gray-600 cursor-pointer hover:text-black" />
+            </div>
+            <div>
+              <input
+                type="text"
+                className='rounded-4xl px-5 w-[550px] py-2 bg-gray-100'
+                placeholder='Qidiruv'
+              />
+            </div>
+            <div className='flex items-center gap-5'>
+              <div className="flex items-center gap-4">
+                <div className='flex justify-center gap-5'>
+                  <h1 className="text-lg font-semibold">Yangi Dizayn</h1>
+                  <button className="bg-gray-200 hover:bg-gray-300 text-sm font-medium px-3 py-1 rounded-lg transition">uz</button>
+                </div>
+                <Maximize2 className="w-7 h-7 text-gray-600 cursor-pointer hover:text-black" />
+                <HelpCircle className="w-7 h-7 text-gray-600 cursor-pointer hover:text-black" />
+                <Clock className="w-7 h-7 text-gray-600 cursor-pointer hover:text-black" />
+                <Bell className="w-7 h-7 text-gray-600 cursor-pointer hover:text-black" />
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <h1 className="font-semibold">Rixiboyev Abdullox</h1>
+                  <Image src="/profile.jpg" alt="profile" width={32} height={32} className="rounded-full object-cover" />
+                </div>
+              </div>
+            </div>
+          </nav>
         </header>
+
 
         <main className="p-8">
           <div className="flex justify-between mb-6">

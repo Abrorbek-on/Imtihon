@@ -15,15 +15,18 @@ import {
     Wallet,
     BarChart,
     Settings,
+    Trash2,
+    Edit3,
+    X,
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 function Teacher() {
     const navigate = useRouter();
-
     const [teachers, setTeachers] = useState([]);
     const [isAddOpen, setIsAddOpen] = useState(false);
+    const [selectedTeacher, setSelectedTeacher] = useState(null);
     const [form, setForm] = useState({
         fullname: "",
         gender: "",
@@ -39,18 +42,12 @@ function Teacher() {
     });
 
     const fetchTeachers = async () => {
-        try {
-            const res = await fetch("http://localhost:5000/teachers");
-            const data = await res.json();
-            setTeachers(data);
-        } catch (error) {
-            console.error("O'qituvchilarni olishda xatolik:", error);
-        }
+        const res = await fetch("http://localhost:5000/teachers");
+        const data = await res.json();
+        setTeachers(data);
     };
 
-    useEffect(() => {
-        fetchTeachers();
-    }, []);
+    useEffect(() => { fetchTeachers(); }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -59,149 +56,142 @@ function Teacher() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        try {
-            const res = await fetch("http://localhost:5000/teachers", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ ...form, birthday: form.birthday || undefined }),
-            });
+        const res = await fetch("http://localhost:5000/teachers", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(form),
+        });
+        const newTeacher = await res.json();
+        setTeachers([...teachers, newTeacher]);
+        setIsAddOpen(false);
+        setForm({
+            fullname: "",
+            gender: "",
+            email: "",
+            phone: "",
+            photo: "",
+            birthday: "",
+            password: "",
+            branch_id: 1,
+            coin: 50,
+            status: "active",
+            description: "",
+        });
+    };
 
-            if (!res.ok) {
-                let errorMsg = "Xatolik yuz berdi!";
-                try {
-                    const errorData = await res.json();
-                    errorMsg = errorData?.message || errorMsg;
-                } catch { }
-                throw new Error(errorMsg);
-            }
+    const handleDelete = async (id) => {
+        if (!confirm("O‘chirishni tasdiqlaysizmi?")) return;
+        await fetch(`http://localhost:5000/teachers/${id}`, { method: "DELETE" });
+        setTeachers(teachers.filter((t) => t.id !== id));
+        setSelectedTeacher(null);
+    };
 
-            const newTeacher = await res.json();
-            setTeachers([...teachers, newTeacher]);
-            setIsAddOpen(false);
-
-            setForm({
-                fullname: "",
-                gender: "",
-                email: "",
-                phone: "",
-                photo: "",
-                birthday: "",
-                password: "",
-                branch_id: 1,
-                coin: 50,
-                status: "active",
-                description: "",
-            });
-
-        } catch (error) {
-            console.error("O'qituvchi qo'shishda xatolik:", error);
-            alert(error.message);
-        }
+    const handleEdit = async (e) => {
+        e.preventDefault();
+        await fetch(`http://localhost:5000/teachers/${selectedTeacher.id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(selectedTeacher),
+        });
+        fetchTeachers();
+        setSelectedTeacher(null);
     };
 
     return (
         <div className="flex min-h-screen bg-gray-50">
-            <aside className="w-[100px] bg-white shadow-md flex flex-col items-center py-8 gap-5">
-                <UmbrellaIcon className="w-10 h-10 text-gray-600 hover:text-yellow-500 cursor-pointer" />
-                <div className="flex flex-col items-center gap-6 mt-5">
-                    <div onClick={() => navigate.push('/leads')} className="flex flex-col items-center text-gray-700 hover:text-yellow-600 cursor-pointer">
-                        <Users size={28} />
-                        <p className="text-[14px]">Lidlar</p>
-                    </div>
-                    <div
-                        onClick={() => navigate.push("/teacher")}
-                        className="flex flex-col items-center text-yellow-600 border-l-4 border-yellow-600 pl-2 cursor-pointer"
-                    >
-                        <User2 size={28} />
-                        <p className="text-[14px] font-medium">O‘qituvchilar</p>
-                    </div>
-                    <div
-                        onClick={() => navigate.push("/group")}
-                        className="flex flex-col items-center text-gray-700 hover:text-yellow-600 cursor-pointer"
-                    >
-                        <ClipboardList size={28} />
-                        <p className="text-[14px]">Guruhlar</p>
-                    </div>
-                    <div onClick={() => navigate.push("/talabalar")} className="flex flex-col items-center text-gray-700 hover:text-yellow-600 cursor-pointer">
-                        <BookOpen size={28} />
-                        <p className="text-[14px]">Talabalar</p>
-                    </div>
-                    <div className="flex flex-col items-center text-gray-700 hover:text-yellow-600 cursor-pointer">
-                        <Wallet size={28} />
-                        <p className="text-[14px]">Moliya</p>
-                    </div>
-                    <div className="flex flex-col items-center text-gray-700 hover:text-yellow-600 cursor-pointer">
-                        <BarChart size={28} />
-                        <p className="text-[14px]">Hisobotlar</p>
-                    </div>
-                    <div
-                        onClick={() => navigate.push("/sozlamalar")}
-                        className="flex flex-col items-center text-gray-700 hover:text-yellow-600 cursor-pointer"
-                    >
-                        <Settings size={28} />
-                        <p className="text-[14px]">Sozlamalar</p>
-                    </div>
-                </div>
-            </aside>
+            <main className='flex mt-[85px]'>
+                <section>
+                    <div className='flex flex-col min-h-screen items-center'>
+                        <div onClick={() => navigate.push('/leads')} className='flex border-l-4 cursor-pointer border-white  hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 w-35 h-25 flex-col justify-center items-center '>
+                            <Users size={32} />
+                            <h1 className='text-[20px]'>Lidlar</h1>
+                        </div>
+                        <div onClick={() => navigate.push('/teacher')} className='flex flex-col border-l-4 cursor-pointer border-white hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600  w-35 h-25 justify-center items-center '>
+                            <User2 size={32} />
+                            <h1 className='text-[20px]'>O‘qituvchilar</h1>
+                        </div>
+                        <div onClick={() => navigate.push('/group')} className='flex cursor-pointer flex-col border-l-4 border-white hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 w-35 h-25  justify-center items-center '>
+                            <ClipboardList size={32} />
+                            <h1 className='text-[20px]'>Guruhlar</h1>
+                        </div>
 
-            <div className="flex-1">
-                <header className="shadow-sm bg-white px-10 py-4 flex items-center justify-between">
-                    <div className="flex items-center gap-5">
-                        <PlusCircle
-                            className="w-8 h-8 text-gray-600 cursor-pointer hover:text-black"
-                            onClick={() => setIsAddOpen(true)}
-                        />
-                        <input
-                            type="text"
-                            placeholder="Qidiruv"
-                            className="rounded-full px-5 py-2 bg-gray-100 w-[400px] focus:outline-none"
-                        />
-                    </div>
-                    <div className="flex items-center gap-6">
-                        <h1 className="font-semibold text-gray-800">Yangi dizayn</h1>
-                        <button className="bg-gray-200 hover:bg-gray-300 px-3 py-1 rounded-lg">
-                            uz
-                        </button>
-                        <Maximize2 className="text-gray-600 w-6 h-6 cursor-pointer" />
-                        <HelpCircle className="text-gray-600 w-6 h-6 cursor-pointer" />
-                        <Clock className="text-gray-600 w-6 h-6 cursor-pointer" />
-                        <Bell className="text-gray-600 w-6 h-6 cursor-pointer" />
-                        <div className="flex items-center gap-2">
-                            <p className="font-semibold">Rixiboyev Abdullox</p>
-                            <Image
-                                src="/assets/books.png"
-                                alt="profile"
-                                width={32}
-                                height={32}
-                                className="rounded-full object-cover"
-                            />
+                        <div onClick={() => navigate.push("/talabalar")} className='flex flex-col border-l-4 border-white cursor-pointer hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 w-35 h-25 justify-center items-center '>
+                            <BookOpen size={32} />
+                            <h1 className='text-[20px]'>Talabalar</h1>
+                        </div>
+                        <div className='flex flex-col border-l-4 border-white cursor-pointer hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 w-35 h-25 justify-center items-center '>
+                            <Wallet size={32} />
+                            <h1 className='text-[20px]'>Moliya</h1>
+                        </div>
+                        <div className='flex flex-col w-35 h-25 border-l-4 cursor-pointer hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 border-white justify-center items-center '>
+                            <BarChart size={32} />
+                            <h1
+                                className='text-[20px]'>Hisobotlar</h1>
+                        </div>
+                        <div onClick={() => navigate.push('/sozlamalar')} className='flex flex-col cursor-pointer w-35 h-25 border-l-4 hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 border-white justify-center items-center '>
+                            <Settings size={32} />
+                            <h1
+                                className='text-[20px]'>Sozlamalar</h1>
                         </div>
                     </div>
-                </header>
+                </section>
+            </main>
+            <div className="flex-1">
+                <div>
+                    <header>
+                        <nav className='flex items-center p-5 px-10 justify-between'>
+                            <div className='flex gap-10 items-center left-0 absolute ml-[50px]'>
+                                <UmbrellaIcon className='w-12 h-12 text-gray-600 cursor-pointer hover:text-yellow-500'></UmbrellaIcon>
+                                <PlusCircle className="w-7 h-7 text-gray-600 cursor-pointer hover:text-black"></PlusCircle>
+                            </div>
+                            <div>
+                                <input type="text" className=' rounded-4xl px-5 w-[550px] py-2 bg-gray-100' placeholder='Qidiruv' />
+                            </div>
+                            <div className='flex items-center gap-5'>
 
+                                <div className="flex items-center gap-4">
+                                    <div className='flex justify-center gap-5'>
+                                        <h1 className="text-lg font-semibold">Yangi Dizayn</h1>
+                                        <button className="bg-gray-200 hover:bg-gray-300 text-sm font-medium px-3 py-1 rounded-lg transition">
+                                            uz
+                                        </button>
+                                    </div>
+                                    <Maximize2 className="w-7 h-7 text-gray-600 cursor-pointer hover:text-black" />
+                                    <HelpCircle className="w-7 h-7 text-gray-600 cursor-pointer hover:text-black" />
+                                    <Clock className="w-7 h-7 text-gray-600 cursor-pointer hover:text-black" />
+                                    <Bell className="w-7 h-7 text-gray-600 cursor-pointer hover:text-black" />
+                                </div>
+                                <div className="flex items-center gap-4">
+                                    <div className="flex items-center gap-2">
+                                        <h1 className="font-semibold">Rixiboyev Abdullox</h1>
+                                        <Image src="/profile.jpg" alt="profile" width={32} height={32} className="rounded-full object-cover" />
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                    </header>
+                </div>
                 <main className="p-8">
-                    <div className="flex justify-between">
-                        <h2 className="text-2xl font-semibold mb-6">
+                    <div className="flex justify-between mb-6">
+                        <h2 className="text-2xl font-semibold">
                             O‘qituvchilar <span className="text-gray-500">({teachers.length} ta)</span>
                         </h2>
-
-                        <button
-                            onClick={() => setIsAddOpen(true)}
-                            className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-6 rounded-lg"
-                        >
+                        <button onClick={() => setIsAddOpen(true)} className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-6 rounded-lg">
                             O‘qituvchi qo‘shish
                         </button>
                     </div>
 
                     <div className="grid grid-cols-2 gap-5">
                         {teachers.map((t, i) => (
-                            <div
-                                key={i}
-                                className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 hover:shadow-md transition flex justify-between"
-                            >
-                                <h3 className="font-semibold text-lg">{t.fullname}</h3>
-                                <p className="text-gray-500">{t.phone}</p>
-                                {t.description && <p className="text-sm text-gray-400">{t.description}</p>}
+                            <div key={i} onClick={() => setSelectedTeacher(t)} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 hover:shadow-lg transition cursor-pointer">
+                                <div className="flex items-center gap-4">
+                                    <img src={t.photo || "/assets/books.png"} alt={t.fullname} className="w-16 h-16 rounded-full object-cover border" />
+                                    <div>
+                                        <h3 className="font-semibold text-lg">{t.fullname}</h3>
+                                        <p className="text-gray-500">{t.phone}</p>
+                                        <p className="text-sm text-gray-400">{t.email}</p>
+                                    </div>
+                                </div>
                             </div>
                         ))}
                     </div>
@@ -212,37 +202,52 @@ function Teacher() {
                 <div className="fixed top-0 right-0 w-[350px] h-full bg-white shadow-2xl z-50 p-6 overflow-y-auto">
                     <div className="flex justify-between items-center mb-5">
                         <h2 className="text-lg font-semibold">Yangi o‘qituvchi qo‘shish</h2>
-                        <button
-                            onClick={() => setIsAddOpen(false)}
-                            className="text-gray-500 hover:text-black text-2xl"
-                        >
-                            ×
-                        </button>
+                        <button onClick={() => setIsAddOpen(false)} className="text-gray-500 hover:text-black text-2xl">×</button>
                     </div>
-
                     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                        <input type="text" name="fullname" placeholder="Ism" value={form.fullname} onChange={handleChange} className="w-full border rounded-lg p-2" />
-                        <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} className="w-full border rounded-lg p-2" />
-                        <input type="tel" name="phone" placeholder="+998" value={form.phone} onChange={handleChange} className="w-full border rounded-lg p-2" />
-                        <input type="date" name="birthday" value={form.birthday} onChange={handleChange} className="w-full border rounded-lg p-2" />
-
+                        <input type="text" name="fullname" placeholder="Ism" value={form.fullname} onChange={handleChange} className="border rounded-lg p-2" />
+                        <input type="email" name="email" placeholder="Email" value={form.email} onChange={handleChange} className="border rounded-lg p-2" />
+                        <input type="tel" name="phone" placeholder="+998" value={form.phone} onChange={handleChange} className="border rounded-lg p-2" />
+                        <input type="date" name="birthday" value={form.birthday} onChange={handleChange} className="border rounded-lg p-2" />
                         <div className="flex items-center gap-4">
-                            <label>
-                                <input type="radio" name="gender" value="MALE" checked={form.gender === "MALE"} onChange={handleChange} /> Erkak
-                            </label>
-                            <label>
-                                <input type="radio" name="gender" value="FEMALE" checked={form.gender === "FEMALE"} onChange={handleChange} /> Ayol
-                            </label>
+                            <label><input type="radio" name="gender" value="MALE" checked={form.gender === "MALE"} onChange={handleChange} /> Erkak</label>
+                            <label><input type="radio" name="gender" value="FEMALE" checked={form.gender === "FEMALE"} onChange={handleChange} /> Ayol</label>
                         </div>
-
-                        <input type="text" name="photo" placeholder="Photo URL" value={form.photo} onChange={handleChange} className="w-full border rounded-lg p-2" />
-                        <input type="text" name="description" placeholder="Tavsif" value={form.description} onChange={handleChange} className="w-full border rounded-lg p-2" />
-                        <input type="password" name="password" placeholder="Parol" value={form.password} onChange={handleChange} className="w-full border rounded-lg p-2" />
-
-                        <button type="submit" className="mt-5 bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg">
-                            Saqlash
-                        </button>
+                        <input type="text" name="photo" placeholder="Photo URL" value={form.photo} onChange={handleChange} className="border rounded-lg p-2" />
+                        <input type="text" name="description" placeholder="Tavsif" value={form.description} onChange={handleChange} className="border rounded-lg p-2" />
+                        <input type="password" name="password" placeholder="Parol" value={form.password} onChange={handleChange} className="border rounded-lg p-2" />
+                        <button type="submit" className="mt-5 bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg">Saqlash</button>
                     </form>
+                </div>
+            )}
+
+            {selectedTeacher && (
+                <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+                    <div className="bg-white rounded-2xl shadow-xl w-[450px] p-6 relative">
+                        <button onClick={() => setSelectedTeacher(null)} className="absolute top-3 right-3 text-gray-400 hover:text-black">
+                            <X size={22} />
+                        </button>
+                        <div className="text-center">
+                            <img src={selectedTeacher.photo || "/assets/books.png"} alt={selectedTeacher.fullname} className="w-24 h-24 rounded-full object-cover mx-auto border mb-3" />
+                            <h2 className="text-xl font-semibold">{selectedTeacher.fullname}</h2>
+                            <p className="text-gray-500">{selectedTeacher.email}</p>
+                            <p className="text-gray-500">{selectedTeacher.phone}</p>
+                        </div>
+                        <form onSubmit={handleEdit} className="mt-5 flex flex-col gap-3">
+                            <input name="fullname" value={selectedTeacher.fullname} onChange={(e) => setSelectedTeacher({ ...selectedTeacher, fullname: e.target.value })} className="border rounded-lg p-2" />
+                            <input name="email" value={selectedTeacher.email} onChange={(e) => setSelectedTeacher({ ...selectedTeacher, email: e.target.value })} className="border rounded-lg p-2" />
+                            <input name="phone" value={selectedTeacher.phone} onChange={(e) => setSelectedTeacher({ ...selectedTeacher, phone: e.target.value })} className="border rounded-lg p-2" />
+                            <textarea name="description" value={selectedTeacher.description || ""} onChange={(e) => setSelectedTeacher({ ...selectedTeacher, description: e.target.value })} className="border rounded-lg p-2" placeholder="Tavsif" />
+                            <div className="flex justify-between mt-4">
+                                <button type="submit" className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                                    <Edit3 size={18} /> Yangilash
+                                </button>
+                                <button type="button" onClick={() => handleDelete(selectedTeacher.id)} className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                                    <Trash2 size={18} /> O‘chirish
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             )}
         </div>

@@ -56,7 +56,7 @@ function Page() {
                             <h1 className='text-[20px]'>Guruhlar</h1>
                         </div>
 
-                        <div onClick={() => navigate.push("/talabalar")}  className='flex flex-col border-l-4 border-white cursor-pointer hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 w-35 h-25 justify-center items-center '>
+                        <div onClick={() => navigate.push("/talabalar")} className='flex flex-col border-l-4 border-white cursor-pointer hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 w-35 h-25 justify-center items-center '>
                             <BookOpen size={32} />
                             <h1 className='text-[20px]'>Talabalar</h1>
                         </div>
@@ -80,31 +80,7 @@ function Page() {
                     <div className="max-w-5xl  bg-white rounded-2xl shadow-lg p-10 border border-gray-200">
                         <h1 className="text-3xl font-bold text-gray-800 mb-10 flex items-center gap-3"><Settings className="text-yellow-500" /> Sozlamalar bo‘limi</h1>
                         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-                            <div className="p-5  rounded-xl border border-gray-500 hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center">
-                                <Mail className="w-8 h-8 text-yellow-500 mb-3" />
-                                <h2 className="text-lg font-semibold">SMS sozlamalari</h2>
-                            </div>
-                            <div className="p-5 rounded-xl border border-gray-500 hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center">
-                                <Headphones className="w-8 h-8 text-yellow-500 mb-3" />
-                                <h2 className="text-lg font-semibold">Onlayn telefoniya</h2>
-                            </div>
-                            <div className="p-5 rounded-xl border border-gray-500 hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center">
-                                <Settings className="w-8 h-8 text-yellow-500 mb-3" />
-                                <h2 className="text-lg font-semibold">Umumiy sozlamalari</h2>
-                            </div>
-                            <div className="p-5 rounded-xl border border-gray-500 hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center">
-                                <Users className="w-8 h-8 text-yellow-500 mb-3" />
-                                <h2 className="text-lg font-semibold">Xodimlar</h2>
-                            </div>
-                            <div className="p-5 rounded-xl border border-gray-500 hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center">
-                                <CreditCard className="w-8 h-8 text-yellow-500 mb-3" />
-                                <h2 className="text-lg font-semibold">Billing</h2>
-                            </div>
 
-                            <div onClick={() => navigate.push('/prodlyonka')} className="p-5 rounded-xl border border-gray-500 hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center">
-                                <Map className="w-8 h-8 text-yellow-500 mb-3" />
-                                <h2 className="text-lg font-semibold">Prodlyonka</h2>
-                            </div>
                             <div onClick={() => navigate.push('/course')} className="p-5 rounded-xl border border-gray-500 hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center">
                                 <BookOpen className="w-8 h-8 text-yellow-500 mb-3" />
                                 <h2 className="text-lg font-semibold">Kurslar</h2>
@@ -113,23 +89,12 @@ function Page() {
                                 <Building2 className="w-8 h-8 text-yellow-500 mb-3" />
                                 <h2 className="text-lg font-semibold">Xonalar</h2>
                             </div>
-                            <div className="p-5 rounded-xl border border-gray-500 hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center">
-                                <Bed className="w-8 h-8 text-yellow-500 mb-3" />
-                                <h2 className="text-lg font-semibold">Dam olish kunlari</h2>
-                            </div>
-                            <div className="p-5 rounded-xl border border-gray-500 hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center">
-                                <Archive className="w-8 h-8 text-yellow-500 mb-3" />
-                                <h2 className="text-lg font-semibold">Arxiv</h2>
-                            </div>
-                            <div className="p-5 rounded-xl border border-gray-500 hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center">
-                                <FileText className="w-8 h-8 text-yellow-500 mb-3" />
-                                <h2 className="text-lg font-semibold">Shakllar</h2>
-                            </div>
-                            <div className="p-5 rounded-xl border border-gray-500 hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center">
-                                <LogOut className="w-8 h-8 text-yellow-500 mb-3" />
+                            <div onClick={() => navigate.push('/login')} className="p-5 rounded-xl border border-gray-500 hover:shadow-md cursor-pointer transition flex flex-col items-center justify-center text-center">
+                                <Building2 className="w-8 h-8 text-yellow-500 mb-3" />
                                 <h2 className="text-lg font-semibold">Chiqish</h2>
                             </div>
-                        </div>
+
+                        </div>  
                     </div>
                 </section>
             </main>
