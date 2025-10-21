@@ -21,17 +21,27 @@ import {
 import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 
+// 1️⃣ Course interfeysi
+interface Course {
+    id: string;
+    name: string;
+    description?: string;
+    price: number;
+    duration_hours: number;
+    duration_months: number;
+}
+
 export default function CourseDetailPage() {
     const navigate = useRouter();
     const { id } = useParams();
     const [activeTab, setActiveTab] = useState("Guruhlar");
-    const [course, setCourse] = useState(null);
+    const [course, setCourse] = useState<Course | null>(null); // 2️⃣ Type qo‘shildi
 
     useEffect(() => {
         if (id) {
             fetch(`http://localhost:5000/courses/${id}`)
                 .then((res) => res.json())
-                .then((data) => setCourse(data))
+                .then((data: Course) => setCourse(data)) // 3️⃣ fetch natijasi Course tipi
                 .catch((err) => console.error("Xatolik:", err));
         }
     }, [id]);
@@ -55,10 +65,9 @@ export default function CourseDetailPage() {
                         <PlusCircle className="w-7 h-7 text-gray-600 cursor-pointer hover:text-black"></PlusCircle>
                     </div>
                     <div>
-                        <input type="text" className=' rounded-4xl px-5 w-[550px] py-2 bg-gray-100' placeholder='Qidiruv' />
+                        <input type="text" className='rounded-4xl px-5 w-[550px] py-2 bg-gray-100' placeholder='Qidiruv' />
                     </div>
                     <div className='flex items-center gap-5'>
-
                         <div className="flex items-center gap-4">
                             <div className='flex justify-center gap-5'>
                                 <h1 className="text-lg font-semibold">Yangi Dizayn</h1>
@@ -83,8 +92,8 @@ export default function CourseDetailPage() {
 
             <main className="flex">
                 <section>
-                    <div className='flex flex-col min-h-screen  shadow-[7px_5px_6px_0px_rgba(0,_0,_0,_0.1)] items-center'>
-                        <div onClick={() => navigate.push('/leads')} className='flex border-l-4 cursor-pointer border-white  hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 w-35 h-25 flex-col justify-center items-center '>
+                    <div className='flex flex-col min-h-screen shadow-[7px_5px_6px_0px_rgba(0,_0,_0,_0.1)] items-center'>
+                        <div onClick={() => navigate.push('/leads')} className='flex border-l-4 cursor-pointer border-white hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 w-35 h-25 flex-col justify-center items-center '>
                             <Users size={32} />
                             <h1 className='text-[20px]'>Lidlar</h1>
                         </div>
@@ -107,25 +116,23 @@ export default function CourseDetailPage() {
                         </div>
                         <div className='flex flex-col w-35 h-25 border-l-4 cursor-pointer hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 border-white justify-center items-center '>
                             <BarChart size={32} />
-                            <h1
-                                className='text-[20px]'>Hisobotlar</h1>
+                            <h1 className='text-[20px]'>Hisobotlar</h1>
                         </div>
                         <div onClick={() => navigate.push('/sozlamalar')} className='flex flex-col cursor-pointer w-35 h-25 border-l-4 hover:border-yellow-600 transition-all duration-200 hover:text-yellow-600 border-white justify-center items-center '>
                             <Settings size={32} />
-                            <h1
-                                className='text-[20px]'>Sozlamalar</h1>
+                            <h1 className='text-[20px]'>Sozlamalar</h1>
                         </div>
                     </div>
                 </section>
 
                 <section className="flex-1 p-8">
-                    <h1 className="text-2xl font-semibold mb-6">{course.name}</h1>
+                    <h1 className="text-2xl font-semibold mb-6">{course?.name}</h1>
 
                     <div className="flex gap-10">
                         <div className="bg-white shadow-md rounded-xl w-[400px] overflow-hidden">
                             <div className="relative">
                                 <div className="bg-orange-300 h-[300px] flex items-center justify-center">
-                                    <h1 className="text-2xl font-semibold text-white">{course.name}</h1>
+                                    <h1 className="text-2xl font-semibold text-white">{course?.name}</h1>
                                 </div>
                                 <div className="absolute top-3 right-3 flex gap-2">
                                     <button className="bg-white p-2 rounded-full shadow hover:bg-gray-100">
@@ -138,10 +145,10 @@ export default function CourseDetailPage() {
                             </div>
 
                             <div className="p-5 space-y-3 text-gray-700">
-                                <p><strong>Tavsif:</strong> {course.description || "Tavsif mavjud emas"}</p>
-                                <p><strong>Narx:</strong> {course.price} UZS</p>
-                                <p><strong>Soatlar:</strong> {course.duration_hours}</p>
-                                <p><strong>Davomiyligi (oy):</strong> {course.duration_months}</p>
+                                <p><strong>Tavsif:</strong> {course?.description || "Tavsif mavjud emas"}</p>
+                                <p><strong>Narx:</strong> {course?.price} UZS</p>
+                                <p><strong>Soatlar:</strong> {course?.duration_hours}</p>
+                                <p><strong>Davomiyligi (oy):</strong> {course?.duration_months}</p>
                             </div>
                         </div>
 
