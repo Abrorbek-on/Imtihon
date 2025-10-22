@@ -34,13 +34,15 @@ export default function CourseDetailPage() {
     const navigate = useRouter();
     const { id } = useParams();
     const [activeTab, setActiveTab] = useState("Guruhlar");
-    const [course, setCourse] = useState<Course | null>(null); 
+    const [course, setCourse] = useState<Course | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editData, setEditData] = useState<Course | null>(null);
 
     useEffect(() => {
         if (id) {
             fetch(`http://localhost:5000/courses/${id}`)
                 .then((res) => res.json())
-                .then((data: Course) => setCourse(data)) 
+                .then((data: Course) => setCourse(data))
                 .catch((err) => console.error("Xatolik:", err));
         }
     }, [id]);
@@ -54,6 +56,54 @@ export default function CourseDetailPage() {
             </div>
         );
     }
+
+    const handleDelete = () => {
+        if (!course) return;
+
+        const confirmDelete = confirm(`"${course.name}" kursini o'chirmoqchimisiz?`);
+        if (confirmDelete) {
+            fetch(`http://localhost:5000/courses/${course.id}`, {
+                method: "DELETE",
+            })
+                .then((res) => {
+                    if (!res.ok) throw new Error("O'chirishda xatolik yuz berdi");
+                    alert("Kurs muvaffaqiyatli o'chirildi");
+                    navigate.push("/courses");
+                })
+                .catch((err) => console.error(err));
+        }
+    };
+
+
+
+    const handleEditClick = () => {
+        if (course) {
+            setEditData(course);
+            setIsModalOpen(true);
+        }
+    };
+
+    const handleSave = () => {
+        if (!editData) return;
+
+        const { id, ...dataWithoutId } = editData;
+
+        fetch(`http://localhost:5000/courses/${Number(id)}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataWithoutId),
+        })
+            .then((res) => {
+                if (!res.ok) throw new Error("Yangilashda xatolik");
+                setCourse(editData);
+                setIsModalOpen(false);
+                alert("Kurs muvaffaqiyatli yangilandi");
+            })
+            .catch((err) => console.error(err));
+    };
+
 
     return (
         <div className="min-h-screen bg-gray-50">
@@ -134,13 +184,20 @@ export default function CourseDetailPage() {
                                     <h1 className="text-2xl font-semibold text-white">{course?.name}</h1>
                                 </div>
                                 <div className="absolute top-3 right-3 flex gap-2">
-                                    <button className="bg-white p-2 rounded-full shadow hover:bg-gray-100">
+                                    <button
+                                        onClick={handleEditClick}
+                                        className="bg-white p-2 rounded-full shadow hover:bg-gray-100"
+                                    >
                                         <Edit size={18} />
                                     </button>
-                                    <button className="bg-white p-2 rounded-full shadow hover:bg-gray-100">
+                                    <button
+                                        onClick={handleDelete}
+                                        className="bg-white p-2 rounded-full shadow hover:bg-gray-100"
+                                    >
                                         <Trash2 size={18} />
                                     </button>
                                 </div>
+
                             </div>
 
                             <div className="p-5 space-y-3 text-gray-700">
@@ -189,6 +246,93 @@ export default function CourseDetailPage() {
                     </div>
                 </section>
             </main>
+            {isModalOpen && editData && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                    <div className="bg-white rounded-xl p-6 w-[400px] space-y-4">
+                        <h2 className="text-xl font-semibold">Kursni tahrirlash</h2>
+
+                        <div className="flex flex-col space-y-2">
+                            <label>Kurs nomi</label>
+                            <input
+                                type="text"
+                                value={editData.name}
+                                onChange={(e) =>
+                                    setEditData({ ...editData, name: e.target.value })
+                                }
+                                className="border px-3 py-2 rounded"
+                            />
+                        </div>
+
+                        <div className="flex flex-col space-y-2">
+                            <label>Tavsif</label>
+                            <textarea
+                                value={editData.description || ""}
+                                onChange={(e) =>
+                                    setEditData({ ...editData, description: e.target.value })
+                                }
+                                className="border px-3 py-2 rounded"
+                            />
+                        </div>
+
+                        <div className="flex flex-col space-y-2">
+                            <label>Narx (UZS)</label>
+                            <input
+                                type="number"
+                                value={editData.price}
+                                onChange={(e) =>
+                                    setEditData({ ...editData, price: Number(e.target.value) })
+                                }
+                                className="border px-3 py-2 rounded"
+                            />
+                        </div>
+
+                        <div className="flex flex-col space-y-2">
+                            <label>Soatlar</label>
+                            <input
+                                type="number"
+                                value={editData.duration_hours}
+                                onChange={(e) =>
+                                    setEditData({
+                                        ...editData,
+                                        duration_hours: Number(e.target.value),
+                                    })
+                                }
+                                className="border px-3 py-2 rounded"
+                            />
+                        </div>
+
+                        <div className="flex flex-col space-y-2">
+                            <label>Davomiyligi (oy)</label>
+                            <input
+                                type="number"
+                                value={editData.duration_months}
+                                onChange={(e) =>
+                                    setEditData({
+                                        ...editData,
+                                        duration_months: Number(e.target.value),
+                                    })
+                                }
+                                className="border px-3 py-2 rounded"
+                            />
+                        </div>
+
+                        <div className="flex justify-end gap-2 mt-4">
+                            <button
+                                onClick={() => setIsModalOpen(false)}
+                                className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+                            >
+                                Bekor qilish
+                            </button>
+                            <button
+                                onClick={handleSave}
+                                className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                            >
+                                Saqlash
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

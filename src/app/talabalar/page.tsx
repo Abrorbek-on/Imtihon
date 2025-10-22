@@ -69,27 +69,38 @@ function Page() {
     };
 
     const handleEdit = (teacher) => {
+        console.log("Tanlangan student:", teacher);
         setSelectedTeacher(teacher);
         setForm({ ...teacher });
         setIsAddOpen(true);
     };
 
+
     const handleUpdate = async (e) => {
         e.preventDefault();
+
         try {
-            const res = await fetch(`http://localhost:5000/students/${selectedTeacher.id}`, {
-                method: "PUT",
+            if (!form.id && form._id) form.id = form._id;
+
+            console.log("Yangilanish ID:", form.id);
+
+            const response = await fetch(`http://localhost:5000/students/${form.id}`, {
+                method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form),
             });
-            if (!res.ok) throw new Error('Yangilashda xatolik');
-            fetchTeachers();
+
+            if (!response.ok) throw new Error("Yangilashda xatolik");
+            const data = await response.json();
+            console.log("Yangilandi:", data);
+            alert("Talaba yangilandi!");
             setIsAddOpen(false);
-            setSelectedTeacher(null);
-        } catch (err) {
-            console.error("handleUpdate xatolik:", err);
+            fetchTeachers();
+        } catch (error) {
+            console.error("handleUpdate xatolik:", error);
         }
     };
+
 
     const handleDelete = async (id) => {
         if (!confirm("O‘chirishni tasdiqlaysizmi?")) return;
@@ -222,8 +233,8 @@ function Page() {
                                         <td className="px-8 py-5">
                                             <span
                                                 className={`px-4 py-1.5 rounded-full text-sm font-semibold ${t.status === 'active'
-                                                        ? 'bg-green-100 text-green-700'
-                                                        : 'bg-gray-200 text-gray-700'
+                                                    ? 'bg-green-100 text-green-700'
+                                                    : 'bg-gray-200 text-gray-700'
                                                     }`}
                                             >
                                                 {t.status}
@@ -232,7 +243,7 @@ function Page() {
                                         <td className="px-8 py-5 flex gap-3">
                                             <button
                                                 onClick={(e) => {
-                                                    e.stopPropagation(); 
+                                                    e.stopPropagation();
                                                     handleEdit(t);
                                                 }}
                                                 className="text-blue-500 hover:text-blue-700"

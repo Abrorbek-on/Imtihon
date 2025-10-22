@@ -88,14 +88,26 @@ function Teacher() {
 
     const handleEdit = async (e) => {
         e.preventDefault();
-        await fetch(`http://localhost:5000/teachers/${selectedTeacher.id}`, {
-            method: "PUT",
+        if (!selectedTeacher?.id) return alert("O‘qituvchi ID topilmadi!");
+
+        const { id, branch, groups, ...payload } = selectedTeacher;
+
+        const res = await fetch(`http://localhost:5000/teachers/${id}`, {
+            method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(selectedTeacher),
+            body: JSON.stringify(payload),
         });
-        fetchTeachers();
+
+        if (!res.ok) {
+            const errorText = await res.text();
+            alert(`Xatolik: ${res.status} - ${errorText}`);
+        }
+
+        await fetchTeachers();
         setSelectedTeacher(null);
     };
+
+
 
     return (
         <div className="flex min-h-screen bg-gray-50">
