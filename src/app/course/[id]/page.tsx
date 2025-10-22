@@ -21,7 +21,6 @@ import {
 import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
 
-// 1️⃣ Course interfeysi
 interface Course {
     id: string;
     name: string;
@@ -35,13 +34,13 @@ export default function CourseDetailPage() {
     const navigate = useRouter();
     const { id } = useParams();
     const [activeTab, setActiveTab] = useState("Guruhlar");
-    const [course, setCourse] = useState<Course | null>(null); // 2️⃣ Type qo‘shildi
+    const [course, setCourse] = useState<Course | null>(null); 
 
     useEffect(() => {
         if (id) {
             fetch(`http://localhost:5000/courses/${id}`)
                 .then((res) => res.json())
-                .then((data: Course) => setCourse(data)) // 3️⃣ fetch natijasi Course tipi
+                .then((data: Course) => setCourse(data)) 
                 .catch((err) => console.error("Xatolik:", err));
         }
     }, [id]);
